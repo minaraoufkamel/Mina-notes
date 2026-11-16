@@ -9,6 +9,7 @@
   A.h = h;
 
   A.TOOLS = [
+    { id: 'ai', label: 'AI', key: 'A', icon: 'sparkle' },
     { id: 'note', label: 'Note', key: 'N' }, { id: 'link', label: 'Link', key: 'W' }, { id: 'todo', label: 'To-do', key: 'T' },
     { id: 'line', label: 'Line', key: 'L' }, { id: 'board', label: 'Board', key: 'B' }, { id: 'column', label: 'Column', key: 'C' },
     { id: 'comment', label: 'Comment', key: 'M' }, { id: 'table', label: 'Table' }, { id: 'document', label: 'Document', key: 'D' },
@@ -20,7 +21,7 @@
   /* ---------- chrome build ---------- */
   A.buildChrome = function () {
     const tb = $('#toolbar-tools');
-    tb.innerHTML = A.TOOLS.map((t) => `<button class="tool" data-tool="${t.id}" draggable="${t.id !== 'line' && t.id !== 'template' && t.id !== 'upload' && t.id !== 'image'}" title="${t.label}${t.key ? ' (' + t.key + ')' : ''}">${I(t.icon || (A.CardTypes[t.id] || {}).icon || t.id, 20)}<span>${t.label}</span></button>`).join('');
+    tb.innerHTML = A.TOOLS.map((t) => `<button class="tool" data-tool="${t.id}" draggable="${t.id !== 'ai' && t.id !== 'line' && t.id !== 'template' && t.id !== 'upload' && t.id !== 'image'}" title="${t.label}${t.key ? ' (' + t.key + ')' : ''}">${I(t.icon || (A.CardTypes[t.id] || {}).icon || t.id, 20)}<span>${t.label}</span></button>`).join('');
     tb.addEventListener('click', (e) => { const b = e.target.closest('[data-tool]'); if (b) A.addTool(b.dataset.tool); });
     tb.addEventListener('dragstart', (e) => {
       const b = e.target.closest('[data-tool]'); if (!b) return;
@@ -44,6 +45,9 @@
     set('search-btn', 'search', () => A.openSearch(), 'Search (⌘K)');
     set('activity-btn', 'bell', () => A.togglePanel('activity'), 'Activity');
     set('export-btn', 'download', (e) => A.exportMenu(e.currentTarget), 'Export');
+    $('#ai-usage-btn').innerHTML = I('sparkle', 15) + '<span>$0.00</span>';
+    $('#ai-usage-btn').onclick = () => A.togglePanel('ai');
+    A.updateAIBadge && A.updateAIBadge();
     set('settings-btn', 'settings', () => A.openSettings(), 'Settings');
     set('help-btn', 'help', () => A.openShortcuts(), 'Keyboard shortcuts (?)');
     set('theme-btn', 'moon', () => A.cycleTheme(), 'Toggle dark mode');
@@ -676,9 +680,9 @@
     const p = $('#side-panel');
     if (A.panelOpen === name) { A.panelOpen = null; p.classList.remove('open'); document.body.classList.remove('panel-' + name); return; }
     if (A.panelOpen) document.body.classList.remove('panel-' + A.panelOpen);
-    A.panelOpen = name; p.className = 'side-panel open ' + (name === 'trash' || name === 'activity' ? 'right' : 'left');
+    A.panelOpen = name; p.className = 'side-panel open ' + (name === 'trash' || name === 'activity' || name === 'ai' ? 'right' : 'left');
     document.body.classList.add('panel-' + name);
-    ({ unsorted: A.renderUnsorted, trash: A.renderTrash, activity: A.renderActivity, nav: A.renderNav })[name]();
+    ({ unsorted: A.renderUnsorted, trash: A.renderTrash, activity: A.renderActivity, nav: A.renderNav, ai: A.renderAIUsage })[name]();
   };
   function panelShell(title, inner) {
     const p = $('#side-panel');
@@ -863,6 +867,7 @@
         <label class="check"><input type="checkbox" data-s="grid" ${s.grid ? 'checked' : ''}> Show dot grid</label>
         <label class="check"><input type="checkbox" data-s="snap" ${s.snap ? 'checked' : ''}> Snap cards to grid</label>
         <label class="check"><input type="checkbox" data-s="guides" ${s.guides !== false ? 'checked' : ''}> Smart alignment guides</label></section>
+      <section><h4>AI</h4><p class="muted small">API key, model, effort and monthly budget for the AI assistant.</p><div class="row"><button class="btn" data-x="ai">${I('sparkle', 14)} AI settings</button><button class="btn" data-x="aiusage">Usage &amp; cost</button></div></section>
       <section><h4>Your data</h4><p class="muted small">Everything is stored privately in this browser. <span data-usage></span></p>
         <div class="row wrap"><button class="btn" data-x="export">${I('download', 14)} Export backup (.json)</button>
         <button class="btn" data-x="import">${I('upload', 14)} Import backup</button>
@@ -870,6 +875,8 @@
     body.querySelector('[data-s=name]').oninput = (e) => { s.name = e.target.value || 'You'; A.save(); };
     body.querySelectorAll('[data-theme]').forEach((b) => (b.onclick = () => { s.theme = b.dataset.theme; body.querySelectorAll('[data-theme]').forEach((x) => x.classList.toggle('on', x === b)); A.applySettings(); A.save(); }));
     body.querySelectorAll('input[type=checkbox]').forEach((c) => (c.onchange = () => { s[c.dataset.s] = c.checked; A.applySettings(); A.save(); }));
+    body.querySelector('[data-x=ai]').onclick = () => { m.close(); A.openAISettings(); };
+    body.querySelector('[data-x=aiusage]').onclick = () => { m.close(); if (A.panelOpen !== 'ai') A.togglePanel('ai'); };
     body.querySelector('[data-x=export]').onclick = async () => { const json = await A.exportWorkspace(); A.downloadText(json, `workspace-backup-${new Date().toISOString().slice(0, 10)}.json`, 'application/json'); };
     body.querySelector('[data-x=import]').onclick = () => A.pickFiles('.json,application/json', false, async (f) => {
       if (!f[0]) return;
@@ -925,7 +932,7 @@
   /* ---------- shortcuts ---------- */
   A.openShortcuts = function () {
     const rows = [
-      ['Add note / to-do / link / board', 'N  T  W  B'], ['Column / comment / document / sketch', 'C  M  D  S'], ['Line tool', 'L'], ['Colour swatch / image / upload', 'K  I  U'],
+      ['AI assistant (diagrams & docs)', 'A'], ['Add note / to-do / link / board', 'N  T  W  B'], ['Column / comment / document / sketch', 'C  M  D  S'], ['Line tool', 'L'], ['Colour swatch / image / upload', 'K  I  U'],
       ['New note anywhere', 'Double-click canvas'], ['Edit selected card', 'Enter'], ['Stop editing', 'Esc'],
       ['Select multiple', 'Shift-click / drag'], ['Select all', '⌘A'], ['Duplicate', '⌘D  or  Alt-drag'], ['Copy / cut / paste', '⌘C  ⌘X  ⌘V'],
       ['Delete', '⌫'], ['Undo / redo', '⌘Z  ⇧⌘Z'], ['Lock / unlock', '⇧⌘L'], ['Bring forward / send back', '⌘]  ⌘['], ['Nudge', 'Arrows (⇧ = 10px)'],

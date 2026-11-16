@@ -729,6 +729,7 @@
     if (type === 'upload') return A.pickFiles('*/*', true, (f) => A.importFiles(f, pos));
     if (type === 'image') return A.pickFiles('image/*', true, (f) => A.importFiles(f, pos));
     if (type === 'template') return A.openTemplates();
+    if (type === 'ai') return A.openAI();
     const T = A.CardTypes[type]; if (!T) return;
     A.endEdit();
     A.checkpoint();

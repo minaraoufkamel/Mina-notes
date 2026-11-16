@@ -4,7 +4,7 @@
   const A = window.App;
   A.lastPointer = null;
 
-  const TOOL_KEYS = { n: 'note', t: 'todo', w: 'link', l: 'line', b: 'board', c: 'column', m: 'comment', d: 'document', s: 'sketch', k: 'swatch', i: 'image', u: 'upload' };
+  const TOOL_KEYS = { a: 'ai', n: 'note', t: 'todo', w: 'link', l: 'line', b: 'board', c: 'column', m: 'comment', d: 'document', s: 'sketch', k: 'swatch', i: 'image', u: 'upload' };
   const overlayOpen = () => document.querySelector('.modal-back, .doc-editor, .sketch-editor, .lightbox');
 
   function onKey(e) {

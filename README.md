@@ -52,6 +52,35 @@ It runs entirely on your machine. There is no server and no account; all data is
 - Export a board as PNG, PDF (print), Markdown or plain text.
 - Back up and restore the whole workspace, including uploaded files, as a JSON file.
 
+## AI assistant
+
+Press **A** or click **AI** in the toolbar. Requires your own [Claude API key](https://platform.claude.com/settings/keys).
+
+- **Flow diagrams:** describe a process and Claude designs the flowchart. It's laid out automatically, with start/end, step, decision and input/output cards, labelled Yes/No branches, and dashed lines for loops. By default it goes into a new board, so it becomes a diagram inside your diagram.
+- **Documentation:** Claude writes a structured document that streams in live and is saved as a document card. Choose **Both** to write documentation from the diagram it just made.
+- **Board context:** optionally send the current board's content so the diagram or document builds on what's already there.
+
+**Token size and cost**
+- **Before you send:** an exact input token count (from the Claude API's token counting endpoint), the typical output size, and the estimated cost.
+- **After each request:** actual input and output tokens (including the model's thinking tokens) and the exact cost, calculated from the token counts the API returns.
+- **Usage panel:** the badge in the top bar shows this month's spend. Click it to see totals for today, this month and all time, spending by feature, and recent requests, and to export everything as CSV.
+- **Monthly budget:** optional; you're warned before a request would go over it.
+
+**Models** (choose in AI settings; prices per 1M tokens, input / output):
+
+| Model | Price | Notes |
+|---|---|---|
+| Claude Opus 5.5 | $4 / $20 | Default, best quality |
+| Claude Sonnet 5.5 | $2 / $10 | Faster |
+| Claude Haiku 5.5 | $0.10 / $0.50 | Cheapest |
+
+A typical diagram plus its documentation costs roughly $0.10–0.20 on Opus 5.5. If a model declines a request on policy grounds, the API automatically retries on Anthropic's recommended fallback model (not available for Haiku). The usage panel shows when that happens and prices it at the fallback model's rates.
+
+**Where the API key is kept**
+- **Desktop app:** encrypted with the macOS keychain in the app's data folder. The page never sees it; all Claude calls run in the app's main process.
+- **Browser version:** stored in that browser's local storage and sent directly from the page, so prefer the desktop app.
+- The key is never included in workspace backups.
+
 ## Getting started
 
 ### In a browser
@@ -101,6 +130,7 @@ To build for Intel Macs, change `"arm64"` to `"x64"` (or add both) under `build.
 | Delete | `Backspace` |
 | Zoom in / out / 100% / fit | `⌘+` / `⌘-` / `⌘0` / `⇧1` |
 | Go up one board | `⌘↑` |
+| AI assistant | `A` |
 | All shortcuts | `?` |
 
 ## Project structure
@@ -115,8 +145,11 @@ js/canvas.js        Pan/zoom, selection, drag and drop, resizing, lines
 js/ui.js            Toolbars, menus, panels, search, settings, sharing
 js/extras.js        Document editor, sketch editor, export
 js/templates.js     Templates and the starter workspace
+js/ai.js            AI assistant, token/cost estimates, usage ledger
 js/app.js           Startup, keyboard shortcuts, clipboard
 main.js             Electron main process (macOS app window)
+ai-main.js          Claude API calls for the desktop app (holds the API key)
+preload.js          Narrow bridge between the page and ai-main.js
 build/              App icon
 ```
 

@@ -593,3 +593,54 @@ body.panel-unsorted #viewport, body.panel-nav #viewport { left: calc(var(--toolb
   body.print-doc .doc-scroll { overflow: visible; }
   .card { box-shadow: 0 0 0 1px #ddd !important; }
 }
+
+/* ============ AI ============ */
+.ai-badge { display: inline-flex; align-items: center; gap: 5px; height: 30px; padding: 0 10px; margin: 0 4px; border-radius: 15px; border: 1px solid var(--border-2); font-size: 12.5px; font-variant-numeric: tabular-nums; color: var(--text); }
+.ai-badge:hover { background: var(--hover); }
+.ai-badge .ic { color: #8e6bf0; }
+.ai-badge.over { border-color: var(--danger); color: var(--danger); }
+.tool[data-tool="ai"] .ic { color: #8e6bf0; }
+.ai-modal { width: min(720px, 100%); }
+.ai { display: flex; flex-direction: column; gap: 12px; }
+.ai-tabs { align-self: flex-start; }
+.ai-tabs button { display: inline-flex; align-items: center; gap: 6px; }
+.ai-label { font-weight: 600; font-size: 13px; margin-bottom: -6px; }
+.ai-prompt { height: auto; padding: 10px 12px; resize: vertical; line-height: 1.45; min-height: 96px; }
+.ai-opts { display: flex; flex-direction: column; gap: 6px; }
+.ai-estimate { background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-size: 13px; line-height: 1.5; }
+.ai-est-row { display: flex; gap: 12px; align-items: baseline; }
+.ai-est-row > .muted:first-child { flex-shrink: 0; font-size: 11px; text-transform: uppercase; letter-spacing: .05em; font-weight: 600; }
+.ai-warn { margin-top: 6px; color: #b26b00; font-size: 12.5px; }
+.dark .ai-warn { color: #f2b04a; }
+.ai-foot { display: flex; align-items: center; gap: 8px; }
+.ai-nokey { display: flex; align-items: center; gap: 8px; padding: 10px 12px; border-radius: 8px; background: var(--accent-soft); font-size: 13px; }
+.ai-nokey .btn { margin-left: auto; }
+.ai-result { display: flex; flex-direction: column; gap: 8px; }
+.ai-progress { display: flex; align-items: center; gap: 10px; font-size: 13px; color: var(--muted); }
+.spinner { width: 16px; height: 16px; border-radius: 50%; border: 2px solid var(--border-2); border-top-color: var(--accent); animation: spin .8s linear infinite; }
+@keyframes spin { to { transform: rotate(360deg); } }
+.ai-stream { max-height: 240px; overflow: auto; font-size: 13.5px; line-height: 1.55; }
+.ai-stream:not(:empty) { border: 1px solid var(--border); border-radius: 8px; padding: 10px 14px; }
+.ai-stream h1, .ai-stream h2, .ai-stream h3 { margin: .5em 0 .3em; font-size: 15px; }
+.ai-usage-card { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.ai-stat { background: var(--panel-2); border: 1px solid var(--border); border-radius: 8px; padding: 8px 10px; display: flex; flex-direction: column; }
+.ai-stat span { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+.ai-stat b { font-size: 17px; font-variant-numeric: tabular-nums; }
+.ai-stat i { font-style: normal; font-size: 11.5px; color: var(--muted); }
+.ai-note { display: flex; align-items: center; gap: 6px; font-size: 13px; color: #2f8a3c; }
+.dark .ai-note { color: #7fd38c; }
+.ai-error { display: flex; align-items: center; gap: 6px; padding: 9px 12px; border-radius: 8px; background: rgba(229,72,77,.1); color: var(--danger); font-size: 13px; }
+.ai-actions { display: flex; gap: 8px; }
+.check.radio { align-items: flex-start; }
+.check.radio input { margin-top: 3px; }
+.ai-tots { display: flex; flex-direction: column; gap: 8px; }
+.ai-tot { border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; }
+.ai-tot-cost { font-size: 22px; font-weight: 700; font-variant-numeric: tabular-nums; }
+.ai-budget { margin-top: 12px; }
+.ai-budget .row.between { margin-bottom: 4px; }
+.ai-row { display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.ai-row > span:first-child { flex: 1; }
+.ai-list { display: flex; flex-direction: column; }
+.ai-req { padding: 8px 0; border-bottom: 1px solid var(--border); line-height: 1.45; }
+.ai-req-prompt { color: var(--muted); font-style: italic; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+@media (max-width: 760px) { .ai-usage-card { grid-template-columns: repeat(2, 1fr); } .ai-badge span { display: none; } }

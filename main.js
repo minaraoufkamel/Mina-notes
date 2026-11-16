@@ -3,6 +3,7 @@ const { app, BrowserWindow, shell, session, Menu } = require('electron');
 const path = require('path');
 
 const fs = require('fs');
+const aiBridge = require('./ai-main');
 
 let win = null;
 
@@ -30,6 +31,7 @@ function createWindow() {
       nodeIntegration: false,
       sandbox: true,
       spellcheck: true,
+      preload: path.join(__dirname, 'preload.js'),
     },
   });
 
@@ -73,6 +75,7 @@ if (!app.requestSingleInstanceLock()) {
       },
       { role: 'windowMenu' },
     ]));
+    aiBridge.register(() => win);
     createWindow();
     app.on('activate', () => { if (BrowserWindow.getAllWindows().length === 0) createWindow(); });
   });
