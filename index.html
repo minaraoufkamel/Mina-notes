@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Boards</title>
+  <meta name="color-scheme" content="light dark">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect x='2' y='2' width='9' height='9' rx='2' fill='%234c8dff'/%3E%3Crect x='13' y='2' width='9' height='13' rx='2' fill='%23f2c230'/%3E%3Crect x='2' y='13' width='9' height='9' rx='2' fill='%2345b85a'/%3E%3Crect x='13' y='17' width='9' height='5' rx='2' fill='%23ec5ca6'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <header id="topbar">
+    <div class="tb-left">
+      <button class="icon-btn" id="nav-btn"></button>
+      <button class="icon-btn" id="home-btn"></button>
+      <button class="icon-btn" id="back-btn"></button>
+      <nav id="breadcrumbs" aria-label="Board path"></nav>
+    </div>
+    <div class="tb-right">
+      <span id="save-state" class="muted small">Saved</span>
+      <button class="icon-btn" id="undo-btn"></button>
+      <button class="icon-btn" id="redo-btn"></button>
+      <span class="tb-sep"></span>
+      <button class="icon-btn" id="search-btn"></button>
+      <button class="icon-btn" id="activity-btn"></button>
+      <button class="icon-btn" id="theme-btn"></button>
+      <button class="icon-btn" id="help-btn"></button>
+      <button class="icon-btn" id="settings-btn"></button>
+      <button class="icon-btn" id="export-btn"></button>
+      <button class="btn primary" id="share-btn"></button>
+    </div>
+  </header>
+
+  <aside id="toolbar" aria-label="Add to board">
+    <div id="toolbar-tools"></div>
+    <div class="toolbar-bottom">
+      <button class="tool" id="unsorted-btn" title="Unsorted notes"></button>
+      <button class="tool" id="trash-btn" title="Trash — drag cards here to delete"></button>
+    </div>
+  </aside>
+
+  <aside id="side-panel" class="side-panel"></aside>
+
+  <main id="viewport">
+    <div id="world">
+      <svg id="lines-layer" width="1" height="1"></svg>
+      <div id="labels-layer"></div>
+      <div id="cards-layer"></div>
+      <svg id="overlay-layer" width="1" height="1"></svg>
+    </div>
+    <div id="marquee"></div>
+    <div id="empty-hint" hidden></div>
+  </main>
+
+  <div id="zoom-controls">
+    <button class="icon-btn" id="zoom-out"></button>
+    <button id="zoom-label" title="Reset to 100%">100%</button>
+    <button class="icon-btn" id="zoom-in"></button>
+    <button class="icon-btn" id="zoom-fit"></button>
+  </div>
+
+  <div id="toasts" aria-live="polite"></div>
+
+  <script src="js/store.js"></script>
+  <script src="js/icons.js"></script>
+  <script src="js/cards.js"></script>
+  <script src="js/canvas.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/extras.js"></script>
+  <script src="js/templates.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
