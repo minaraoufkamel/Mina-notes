@@ -1,16 +1,15 @@
-// Exposes a narrow AI bridge to the page. No Node access, no API key.
+// Exposes a narrow AI bridge to the page. No Node access, no API keys.
 const { contextBridge, ipcRenderer } = require('electron');
 
 const listeners = new Set();
 ipcRenderer.on('ai:delta', (e, msg) => listeners.forEach((fn) => fn(msg)));
 
 contextBridge.exposeInMainWorld('minaAI', {
-  keyStatus: () => ipcRenderer.invoke('ai:keyStatus'),
-  setKey: (key) => ipcRenderer.invoke('ai:setKey', key),
-  clearKey: () => ipcRenderer.invoke('ai:clearKey'),
-  count: (params) => ipcRenderer.invoke('ai:count', params),
-  create: (params) => ipcRenderer.invoke('ai:create', params),
-  stream: (id, params) => ipcRenderer.invoke('ai:stream', { id, params }),
+  keyStatus: (provider) => ipcRenderer.invoke('ai:keyStatus', provider),
+  setKey: (provider, key) => ipcRenderer.invoke('ai:setKey', provider, key),
+  clearKey: (provider) => ipcRenderer.invoke('ai:clearKey', provider),
+  call: (id, provider, op, params) => ipcRenderer.invoke('ai:call', { id, provider, op, params }),
   cancel: (id) => ipcRenderer.invoke('ai:cancel', id),
+  openrouterModels: () => ipcRenderer.invoke('ai:openrouterModels'),
   onDelta: (fn) => { listeners.add(fn); return () => listeners.delete(fn); },
 });

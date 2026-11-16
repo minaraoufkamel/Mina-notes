@@ -644,3 +644,15 @@ body.panel-unsorted #viewport, body.panel-nav #viewport { left: calc(var(--toolb
 .ai-req { padding: 8px 0; border-bottom: 1px solid var(--border); line-height: 1.45; }
 .ai-req-prompt { color: var(--muted); font-style: italic; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 @media (max-width: 760px) { .ai-usage-card { grid-template-columns: repeat(2, 1fr); } .ai-badge span { display: none; } }
+.ai-settings .seg button { white-space: nowrap; }
+.ai-custom { display: flex; gap: 6px; align-items: center; margin: 4px 0 0 24px; flex-wrap: wrap; }
+.ai-custom .input { width: auto; flex: 1; min-width: 90px; }
+.ai-custom .input[data-customid] { flex: 2; min-width: 160px; }
+.ai-custom.dim { opacity: .65; }
+.ai-or-current { font-size: 13px; margin-bottom: 8px; line-height: 1.4; }
+.ai-or-list { max-height: 260px; overflow: auto; margin-top: 8px; border: 1px solid var(--border); border-radius: 8px; }
+.ai-or-row { display: flex; justify-content: space-between; align-items: center; gap: 10px; width: 100%; text-align: left; padding: 7px 10px; border-bottom: 1px solid var(--border); font-size: 13px; }
+.ai-or-row:last-child { border-bottom: 0; }
+.ai-or-row:hover { background: var(--hover); }
+.ai-or-row.on { background: var(--accent-soft); }
+.ai-or-row > span:last-child { white-space: nowrap; font-variant-numeric: tabular-nums; }

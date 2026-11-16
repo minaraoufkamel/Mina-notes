@@ -54,32 +54,39 @@ It runs entirely on your machine. There is no server and no account; all data is
 
 ## AI assistant
 
-Press **A** or click **AI** in the toolbar. Requires your own [Claude API key](https://platform.claude.com/settings/keys).
+Press **A** or click **AI** in the toolbar. Bring your own API key from any of these providers:
 
-- **Flow diagrams:** describe a process and Claude designs the flowchart. It's laid out automatically, with start/end, step, decision and input/output cards, labelled Yes/No branches, and dashed lines for loops. By default it goes into a new board, so it becomes a diagram inside your diagram.
-- **Documentation:** Claude writes a structured document that streams in live and is saved as a document card. Choose **Both** to write documentation from the diagram it just made.
-- **Board context:** optionally send the current board's content so the diagram or document builds on what's already there.
+| Provider | Models | Token count before sending | Cost after each request |
+|---|---|---|---|
+| **Claude** | Opus 5.5 (default), Sonnet 5.5, Haiku 5.5 | Exact (Anthropic token counting) | Anthropic list prices × reported tokens |
+| **OpenAI** | GPT-6.1 Sol (default), GPT-6 Astra, GPT-6.1 Terra, GPT-6 Luna, or any model ID with your own prices | Exact (OpenAI input-token counting) | OpenAI list prices × reported tokens, including cached-input and long-context rates |
+| **OpenRouter** | Hundreds of models from its live catalog | Approximate (about 4 characters per token) | The amount OpenRouter reports as charged |
+
+Get keys at [platform.claude.com](https://platform.claude.com/settings/keys), [platform.openai.com](https://platform.openai.com/api-keys) or [openrouter.ai](https://openrouter.ai/settings/keys), then add them in **AI settings** and choose which provider to use.
+
+**What it does**
+- **Flow diagrams:** describe a process and the model designs the flowchart. It's laid out automatically, with start/end, step, decision and input/output cards, labelled Yes/No branches, and dashed lines for loops. By default it goes into a new board, so it becomes a diagram inside your diagram.
+- **Documentation:** a structured document streams in live and is saved as a document card. Choose **Both** to write documentation from the diagram it just made.
+- **Board context:** optionally send the current board's content so the result builds on what's already there.
 
 **Token size and cost**
-- **Before you send:** an exact input token count (from the Claude API's token counting endpoint), the typical output size, and the estimated cost.
-- **After each request:** actual input and output tokens (including the model's thinking tokens) and the exact cost, calculated from the token counts the API returns.
-- **Usage panel:** the badge in the top bar shows this month's spend. Click it to see totals for today, this month and all time, spending by feature, and recent requests, and to export everything as CSV.
-- **Monthly budget:** optional; you're warned before a request would go over it.
+- **Before you send:** input tokens, typical output size and the estimated cost.
+- **After each request:** input and output tokens (including reasoning tokens) and the cost.
+- **Usage panel:** the badge in the top bar shows this month's spend. Click it to see totals for today, this month and all time, spending by provider and by feature, and recent requests, and to export everything as CSV.
+- **Monthly budget:** optional and shared across providers; you're warned before a request would go over it.
 
-**Models** (choose in AI settings; prices per 1M tokens, input / output):
+**How each provider is handled**
+- **Claude:** uses structured outputs for diagrams. If Opus or Sonnet declines a request on policy grounds, the API retries on Anthropic's recommended fallback model, and the cost is priced per attempt.
+- **OpenAI:** uses strict JSON-schema output.
+- **OpenRouter:** uses structured output on models that support it and asks for JSON in the instructions on models that don't.
+- **Rejected options:** if a model rejects an optional setting (for example reasoning effort), the request is retried without it.
 
-| Model | Price | Notes |
-|---|---|---|
-| Claude Opus 5.5 | $4 / $20 | Default, best quality |
-| Claude Sonnet 5.5 | $2 / $10 | Faster |
-| Claude Haiku 5.5 | $0.10 / $0.50 | Cheapest |
+**Where API keys are kept**
+- **Desktop app:** each key is encrypted with the macOS keychain in the app's data folder. The page never sees keys; all AI calls run in the app's main process using the official Anthropic and OpenAI SDKs (OpenRouter through the OpenAI SDK).
+- **Browser version:** keys are stored in that browser's local storage and sent directly from the page, so prefer the desktop app.
+- Keys are never included in workspace backups.
 
-A typical diagram plus its documentation costs roughly $0.10–0.20 on Opus 5.5. If a model declines a request on policy grounds, the API automatically retries on Anthropic's recommended fallback model (not available for Haiku). The usage panel shows when that happens and prices it at the fallback model's rates.
-
-**Where the API key is kept**
-- **Desktop app:** encrypted with the macOS keychain in the app's data folder. The page never sees it; all Claude calls run in the app's main process.
-- **Browser version:** stored in that browser's local storage and sent directly from the page, so prefer the desktop app.
-- The key is never included in workspace backups.
+Prices are list prices as of November 2026 and are set in `js/ai.js`; your provider's bill is the final word.
 
 ## Getting started
 
@@ -145,10 +152,10 @@ js/canvas.js        Pan/zoom, selection, drag and drop, resizing, lines
 js/ui.js            Toolbars, menus, panels, search, settings, sharing
 js/extras.js        Document editor, sketch editor, export
 js/templates.js     Templates and the starter workspace
-js/ai.js            AI assistant, token/cost estimates, usage ledger
+js/ai.js            AI assistant: providers, prices, estimates, usage ledger
 js/app.js           Startup, keyboard shortcuts, clipboard
 main.js             Electron main process (macOS app window)
-ai-main.js          Claude API calls for the desktop app (holds the API key)
+ai-main.js          AI provider calls for the desktop app (holds the API keys)
 preload.js          Narrow bridge between the page and ai-main.js
 build/              App icon
 ```

@@ -91,9 +91,20 @@
     const el = A.cardEls.get(id); if (el) { el.classList.remove('flash'); void el.offsetWidth; el.classList.add('flash'); }
   };
   A.spawnIdx = 0;
+  // A spot near the middle of the screen that doesn't sit on top of an existing card.
   A.spawnPoint = function (w = 260) {
     const c = A.viewCenter(); const i = A.spawnIdx++ % 8;
-    return { x: c.x - w / 2 + i * 28, y: c.y - 80 + i * 28 };
+    const base = { x: c.x - w / 2 + i * 28, y: c.y - 80 + i * 28 };
+    const rects = A.cardsOn(A.ui.boardId).map((x) => A.cardRect(x.id)).filter(Boolean);
+    const free = (p) => !rects.some((r) => p.x < r.x + r.w + 16 && p.x + w > r.x - 16 && p.y < r.y + r.h + 16 && p.y + 120 > r.y - 16);
+    if (free(base)) return base;
+    for (let ring = 1; ring <= 12; ring++) {
+      for (const [dx, dy] of [[1, 0], [0, 1], [-1, 0], [0, -1], [1, 1], [-1, 1], [1, -1], [-1, -1]]) {
+        const p = { x: base.x + dx * ring * (w * 0.6), y: base.y + dy * ring * 90 };
+        if (free(p)) return p;
+      }
+    }
+    return base;
   };
 
   /* ---------- render ---------- */
