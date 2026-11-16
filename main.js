@@ -2,7 +2,18 @@
 const { app, BrowserWindow, shell, session, Menu } = require('electron');
 const path = require('path');
 
+const fs = require('fs');
+
 let win = null;
+
+// One-time migration: the app was previously named "Boards". Carry its data over.
+try {
+  const newDir = app.getPath('userData');
+  const oldDir = path.join(app.getPath('appData'), 'Boards');
+  if (fs.existsSync(oldDir) && !fs.existsSync(path.join(newDir, 'IndexedDB'))) {
+    fs.cpSync(oldDir, newDir, { recursive: true, force: false, errorOnExist: false });
+  }
+} catch (e) { console.error('Data migration skipped:', e.message); }
 
 function createWindow() {
   win = new BrowserWindow({
@@ -10,7 +21,7 @@ function createWindow() {
     height: 900,
     minWidth: 720,
     minHeight: 480,
-    title: 'Boards',
+    title: 'Mina Notes',
     titleBarStyle: 'default',
     backgroundColor: '#efeeeb',
     show: false,

@@ -35,7 +35,9 @@
 
     const set = (id, icon, fn, title) => { const b = $('#' + id); b.innerHTML = I(icon, 18); b.onclick = fn; if (title) b.title = title; };
     set('nav-btn', 'menu', () => A.togglePanel('nav'), 'All boards');
-    set('home-btn', 'home', () => A.openBoard(A.state.rootId), 'Home');
+    set('home-btn', 'home', () => A.openBoard(A.state.rootId), 'Mina Notes — Home');
+    $('#home-btn').classList.add('logo-btn');
+    $('#home-btn').innerHTML = '<svg viewBox="100 100 824 824" width="26" height="26" aria-hidden="true"><rect x="100" y="100" width="824" height="824" rx="185" class="logo-tile"/><path d="M322 690 V356 L512 566 L702 356 V690" fill="none" class="logo-m" stroke-width="84" stroke-linecap="round" stroke-linejoin="round"/></svg>';
     set('back-btn', 'back', () => { const b = A.state.boards[A.ui.boardId]; if (b && b.parentId) A.openBoard(b.parentId); }, 'Up one level (Backspace)');
     set('undo-btn', 'undo', () => A.undo(), 'Undo (⌘Z)');
     set('redo-btn', 'redo', () => A.redo(), 'Redo (⇧⌘Z)');
@@ -86,7 +88,7 @@
       bc.querySelectorAll('[data-crumb]').forEach((x) => (x.onclick = () => A.openBoard(x.dataset.crumb)));
       $('#board-title-btn').onclick = (e) => A.boardSettings(e.currentTarget);
       $('#star-btn').onclick = () => { const i = S.starred.indexOf(b.id); if (i >= 0) S.starred.splice(i, 1); else S.starred.push(b.id); A.changed(); bc._sig = null; A.updateChrome(); };
-      document.title = b.title;
+      document.title = b.id === S.rootId ? 'Mina Notes' : `${b.title} — Mina Notes`;
       // make crumbs droppable targets for cards (move up a level)
       bc.querySelectorAll('[data-crumb]').forEach((x) => {
         x.addEventListener('dragover', (e) => { if ([...e.dataTransfer.types].includes('application/x-card')) e.preventDefault(); });

@@ -70,6 +70,10 @@ kbd { font: 11px/1 ui-monospace, SFMono-Regular, Menlo, monospace; padding: 3px 
 .crumb.current { color: var(--text); font-weight: 600; font-size: 15px; max-width: 360px; }
 .crumb:hover { background: var(--hover); }
 .crumb-text { overflow: hidden; text-overflow: ellipsis; }
+.logo-btn .logo-tile { fill: var(--text); }
+.logo-btn .logo-m { stroke: var(--panel); }
+.logo-btn:hover .logo-tile { fill: var(--accent); }
+.logo-btn:hover .logo-m { stroke: #fff; }
 .crumb-sep { color: var(--muted); opacity: .6; }
 .crumb-dot { width: 10px; height: 10px; border-radius: 3px; display: inline-block; flex-shrink: 0; }
 .crumb-emoji { font-size: 15px; }

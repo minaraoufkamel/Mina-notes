@@ -1,10 +1,10 @@
-# Boards
+# Mina Notes
 
 A visual workspace for notes, tasks and diagrams on an infinite canvas. Boards can contain other boards, so you can put a diagram inside a diagram as many levels deep as you like.
 
 It runs entirely on your machine. There is no server and no account; all data is stored locally. Use it in a browser or as a native macOS app (Electron).
 
-![Boards icon](build/icon.png)
+<img src="build/icon.png" alt="Mina Notes logo" width="96">
 
 ## Features
 
@@ -72,7 +72,7 @@ Requires [Node.js](https://nodejs.org) 18 or later.
 ```bash
 npm install
 npm start          # run the app
-npm run dist       # build dist/Boards-<version>-arm64.dmg for Apple Silicon
+npm run dist       # build dist/Mina Notes-<version>-arm64.dmg for Apple Silicon
 ```
 
 The build is not code-signed. The first time you open the installed app, right-click it in Applications and choose **Open**.
@@ -84,7 +84,7 @@ To build for Intel Macs, change `"arm64"` to `"x64"` (or add both) under `build.
 - Boards, cards and settings are saved automatically to IndexedDB, with a copy in localStorage.
 - Uploaded images, videos, audio and files are stored in IndexedDB.
 - Storage belongs to one browser and one address: the browser version, the `localhost` version and the macOS app each keep separate data. Move data between them with **Settings → Export backup** and **Import backup**.
-- The macOS app stores its data in `~/Library/Application Support/Boards`.
+- The macOS app stores its data in `~/Library/Application Support/Mina Notes`.
 - Clearing a browser's site data deletes that copy of your boards, so export a backup regularly.
 
 ## Keyboard shortcuts

@@ -1,6 +1,6 @@
 {
-  "name": "boards",
-  "productName": "Boards",
+  "name": "mina-notes",
+  "productName": "Mina Notes",
   "version": "1.0.0",
   "description": "Visual boards for notes, tasks and nested diagrams",
   "main": "main.js",
@@ -10,8 +10,8 @@
     "dist": "electron-builder --mac dmg --arm64"
   },
   "build": {
-    "appId": "local.boards.app",
-    "productName": "Boards",
+    "appId": "local.minanotes.app",
+    "productName": "Mina Notes",
     "files": [
       "main.js",
       "index.html",
@@ -37,11 +37,11 @@
       "identity": null,
       "hardenedRuntime": false,
       "extendInfo": {
-        "NSMicrophoneUsageDescription": "Boards uses the microphone to record audio notes."
+        "NSMicrophoneUsageDescription": "Mina Notes uses the microphone to record audio notes."
       }
     },
     "dmg": {
-      "title": "Boards"
+      "title": "Mina Notes"
     }
   },
   "devDependencies": {
